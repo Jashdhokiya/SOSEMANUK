@@ -1,10 +1,17 @@
-% lfsr_feedback.m
 function fb = lfsr_feedback(ctx)
-% A simplified LFSR feedback function for a 10-word register.
-% This uses valid indices (1 through 10) to prevent errors.
+% Implements the full LFSR feedback logic for SOSEMANUK.
 
     s = ctx.s;
     
-    % New placeholder logic using valid indices for a 10-word LFSR
-    fb = bitxor(s(1), bitxor(s(3), s(10)));
+    % The official formula is s_t+10 = s_t+3 XOR (a^-1 * s_t+1) XOR (a * s_t)
+    % In our 1-based array:
+    % s_t+3 is s(7)
+    % s_t+1 is s(9)
+    % s_t   is s(10)
+    
+    term1 = s(7);
+    term2 = alpha_inv_mul(s(9));
+    term3 = alpha_mul(s(10));
+    
+    fb = bitxor(term1, bitxor(term2, term3));
 end
